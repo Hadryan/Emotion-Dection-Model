@@ -30,23 +30,6 @@ from keras.callbacks import ModelCheckpoint
 from sklearn.metrics import confusion_matrix
 
 filePath = '../data/Audio_Speech_Actors_01-24'
-        
-#def load_files(path=filePath):
-#    lst = []
-#    for subdir, dirs, files in os.walk(path):
-#        for file in files:
-#            try:
-                #Load librosa array, obtain mfcss, store the file and the mcss information in a new array
-                #print(os.path.join(subdir,file))
-#                X, sample_rate = librosa.load(os.path.join(subdir,file), res_type='kaiser_fast')
-#                mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=40).T,axis=0)
-#                file = file[6:8]
-#                arr = mfccs, file
-#                lst.append(arr)
-            # If the file is not valid, skip it
-#            except ValueError:
-#                continue
-#    return zip(*lst)
 
 def load_files(path=filePath):
     lst = []
@@ -79,16 +62,16 @@ def load_files(path=filePath):
     
 def main():
     print('Loading Files...')
-    X, y = load_files()
-    #X = np.asarray(X)
-    #y = np.asarray(y)
+    X, y = load_files() # load files
     print('Done...')
     
+    # split into training and testing
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
     
     x_traincnn = np.expand_dims(X_train, axis=2)
     x_testcnn = np.expand_dims(X_test, axis=2)
     
+    # build model
     model = Sequential()
 
     model.add(Conv1D(128, 5,padding='same',input_shape=(40,1)))
@@ -114,7 +97,8 @@ def main():
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+    plt.savefig('loss.png')
+    plt.close()
     
     plt.plot(cnn.history['accuracy'])
     plt.plot(cnn.history['val_accuracy'])
@@ -122,8 +106,8 @@ def main():
     plt.ylabel('acc')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
-    
+    plt.savefig('accuracy.png')
+    plt.close()
     
 
 if __name__ == "__main__":
