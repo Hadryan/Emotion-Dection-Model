@@ -84,31 +84,10 @@ def main():
     #y = np.asarray(y)
     print('Done...')
     
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
     
     x_traincnn = np.expand_dims(X_train, axis=2)
     x_testcnn = np.expand_dims(X_test, axis=2)
-    
-    print(x_traincnn)
-    
-    model = Sequential()
-    model.add(Conv1D(64, 5, padding='same',
-                         input_shape=(40, 1)))
-    model.add(Activation('relu'))
-    model.add(Dropout(0.2))
-    model.add(Flatten())
-    model.add(Dense(8))
-    model.add(Activation('softmax'))
-
-    print(model.summary)
-
-    model.compile(loss='sparse_categorical_crossentropy',
-                      optimizer='rmsprop',
-                      metrics=['accuracy'])
-
-    cnn_history = model.fit(x_traincnn, y_train,
-                               batch_size=16, epochs=50,
-                               validation_data=(x_testcnn, y_test))
     
     model = Sequential()
 
@@ -123,9 +102,11 @@ def main():
     model.add(Dense(10))
     model.add(Activation('softmax'))
     
-    opt = keras.optimizers.RMSprop(lr=0.00005, rho=0.9, epsilon=None, decay=0.0)
+    print(model.summary())
+    
+    opt = keras.optimizers.RMSprop(lr=0.0005, rho=0.9, epsilon=None, decay=0.0)
     model.compile(loss='sparse_categorical_crossentropy',optimizer=opt,metrics=['accuracy'])
-    cnn = model.fit(x_traincnn, y_train, batch_size=16, epochs=50, validation_data=(x_testcnn, y_test))
+    cnn=model.fit(x_traincnn, y_train, batch_size=16, epochs=1024, validation_data=(x_testcnn, y_test))
     
     plt.plot(cnn.history['loss'])
     plt.plot(cnn.history['val_loss'])
