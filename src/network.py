@@ -93,18 +93,18 @@ def main():
 
     model.add(Conv1D(128, 5,padding='same',input_shape=(40,1)))
     model.add(Activation('relu'))
-    model.add(Dropout(0.1))
+    model.add(Dropout(0.15))
     model.add(MaxPooling1D(pool_size=(8)))
     model.add(Conv1D(128, 5,padding='same',))
     model.add(Activation('relu'))
-    model.add(Dropout(0.1))
+    model.add(Dropout(0.15))
     model.add(Flatten())
     model.add(Dense(10))
     model.add(Activation('softmax'))
     
     print(model.summary())
     
-    opt = keras.optimizers.RMSprop(lr=0.0005, rho=0.9, epsilon=None, decay=0.0)
+    opt = keras.optimizers.RMSprop(lr=0.00005, rho=0.9, epsilon=None, decay=0.0)
     model.compile(loss='sparse_categorical_crossentropy',optimizer=opt,metrics=['accuracy'])
     cnn=model.fit(x_traincnn, y_train, batch_size=16, epochs=1024, validation_data=(x_testcnn, y_test))
     
